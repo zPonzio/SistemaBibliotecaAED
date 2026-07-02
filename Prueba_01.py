@@ -1,13 +1,16 @@
 def mostrar_menu():
     print("\n--- SISTEMA DE BIBLIOTECA ---")
     print("1. Registrar Préstamo")
-    print("2. Registrar Devolución")
-    print("3. Ver Estadísticas")
+    print("2. Registrar Devolución (Con cálculo de multa)")
+    print("3. Ver Estadísticas y Caja")
     print("4. Salir")
 
 def ejecutar_sistema():
+    # --- CONTADORES Y ACUMULADORES ---
     total_prestamos = 0
     stock_libros = 5
+    dinero_recaudado = 0  # Acumulador para la plata de las multas
+    PRECIO_MULTA_DIARIA = 500  # Valor fijo por día de demora
     
     ejecutando = True
     
@@ -27,13 +30,30 @@ def ejecutar_sistema():
                 
         elif opcion == "2":
             print("\n[Procesando Devolución...]")
+            
+            # --- VALIDACIÓN DE DÍAS DE DEMORA ---
+            dias_demora = int(input("Ingrese los días de demora (0 si se entregó a tiempo): "))
+            
+            if dias_demora < 0:
+                print("Error: Los días de demora no pueden ser negativos.")
+            elif dias_demora > 0:
+                # Calculamos la multa simple
+                multa = dias_demora * PRECIO_MULTA_DIARIA
+                dinero_recaudado = dinero_recaudado + multa  # Sumamos al acumulador
+                print(f"¡Atención! El libro tiene {dias_demora} días de demora.")
+                print(f"Monto de la multa a pagar: ${multa}")
+            else:
+                print("¡Perfecto! El libro fue devuelto a tiempo. Sin multa.")
+            
+            # En cualquier caso, el libro vuelve al stock
             stock_libros = stock_libros + 1
-            print("Libro devuelto. ¡Gracias!")
+            print("Libro devuelto con éxito al stock.")
             
         elif opcion == "3":
             print("\n--- ESTADÍSTICAS ---")
             print(f"Cantidad total de préstamos realizados: {total_prestamos}")
             print(f"Libros disponibles actualmente: {stock_libros}")
+            print(f"Total de dinero recaudado por multas: ${dinero_recaudado}")
             
         elif opcion == "4":
             print("\n¡Gracias por usar el sistema de biblioteca. Hasta luego!")
@@ -44,4 +64,3 @@ def ejecutar_sistema():
 
 if __name__ == "__main__":
     ejecutar_sistema()
-    
